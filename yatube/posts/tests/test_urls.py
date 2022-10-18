@@ -6,6 +6,7 @@ from ..models import Group, Post
 
 User = get_user_model()
 
+
 class PostURLTest(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -19,9 +20,8 @@ class PostURLTest(TestCase):
         cls.post = Post.objects.create(
             author=cls.user,
             text='Тестовый пост',
-            group = cls.group,
+            group=cls.group,
         )
-    
 
     def setUp(self):
         #  Создаем неавторизованный клиент
@@ -34,7 +34,6 @@ class PostURLTest(TestCase):
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user2)
 
-
     """Задание из Практикума "Тестирование URLs":"""
     def test_unauthorized_urls(self):
         """Проверка URL-адресов неавторизованным пользователем"""
@@ -46,7 +45,6 @@ class PostURLTest(TestCase):
                 response = self.guest_client.get(page)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
-
     def test_author_urls(self):
         """Проверка URL-адресов авторизованным автором поста"""
         pages = [
@@ -57,7 +55,6 @@ class PostURLTest(TestCase):
             with self.subTest(page=page):
                 response = self.author_client.get(page)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
-    
 
     def test_auth_user_redirect(self):
         """Проверка редиректа пользователя
@@ -65,7 +62,6 @@ class PostURLTest(TestCase):
         """
         response = self.authorized_client.get('/posts/1/edit/', follow=True)
         self.assertRedirects(response, '/posts/1/')
-
 
     def test_unregistered_redirect(self):
         """Проверка редиректа неавторизованного пользователя"""
@@ -77,13 +73,11 @@ class PostURLTest(TestCase):
             with self.subTest(page=page):
                 response = self.guest_client.get(page)
                 self.assertRedirects(response, redirect_page)
-    
 
     def test_non_existing_page(self):
         """Проверка ответа от несуществующей страницы"""
         response = self.guest_client.get('/unexisting_page/')
         self.assertEqual(response.status_code, 404)
-
 
     def test_urls_correct_template(self):
         """Проверка шаблонов"""

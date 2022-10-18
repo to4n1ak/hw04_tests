@@ -21,7 +21,6 @@ class PostModelTest(TestCase):
             text='Тестовый пост',
         )
 
-
     """Задание из Практикума "Тестирование моделей":"""
     def test_models_group_correct_str(self):
         """Проверяем, что у модели Group корректно работает __str__."""
@@ -29,13 +28,11 @@ class PostModelTest(TestCase):
         expected_object_name = group.title
         self.assertEqual(expected_object_name, str(group))
 
-
     def test_models_post_correct_str(self):
         """Проверяем, что у модели Post корректно работает __str__."""
         post = PostModelTest.post
         expected_object_name = post.text
         self.assertEqual(expected_object_name, str(post))
-
 
     def test_verbose_name_group(self):
         """Проверяем verbose_names у модели Group."""
@@ -49,7 +46,6 @@ class PostModelTest(TestCase):
             with self.subTest(field=field):
                 self.assertEqual(
                     group._meta.get_field(field).verbose_name, expected_value)
-
 
     def test_verbose_name_post(self):
         """Проверяем verbose_names у модели Post."""
