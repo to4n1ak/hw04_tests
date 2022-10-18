@@ -40,7 +40,7 @@ class PostViewsTest(TestCase):
             reverse('posts:group_list',
                     kwargs={'slug':
                             f'{self.group.slug}'}): 'posts/group_list.html',
-            reverse('posts:profile', 
+            reverse('posts:profile',
                     kwargs={'username':
                             f'{self.user.username}'}): 'posts/profile.html',
             reverse('posts:post_detail',
@@ -56,15 +56,15 @@ class PostViewsTest(TestCase):
                 response = self.author_client.get(reverse_address)
                 error = (f'Адрес {reverse_address} - '
                          f'не соответствует шаблону {template}'
-                        )
+                )
                 self.assertTemplateUsed(response, template, error)
 
     """Задание из Практикума "Тестирование Views" No2:"""
     def test_post_detail_correct_context(self):
         """Проверка шаблона "post_detail" на контекст."""
         response = self.author_client.get(reverse('posts:post_detail',
-                                                  kwargs={'post_id':
-                                                  self.post.id}))
+                                                   kwargs={'post_id':
+                                                   self.post.id}))
         post_text_0 = {response.context['post'].text: 'Тестовый пост No1',
                        response.context['post'].group: self.group,
                        response.context['post'].author: PostViewsTest.user
@@ -112,7 +112,8 @@ class PostViewsTest(TestCase):
             with self.subTest(reverse_name=reverse_name):
                 response = self.author_client.get(reverse_name)
                 self.assertEqual(
-                    len(response.context['page_obj'].object_list), POST_PER_PAGE
+                    len(response.context['page_obj'].object_list),
+                    POST_PER_PAGE
                 )
 
     def test_paginator_second_page(self):
