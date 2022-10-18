@@ -56,15 +56,15 @@ class PostViewsTest(TestCase):
                 response = self.author_client.get(reverse_address)
                 error = (f'Адрес {reverse_address} - '
                          f'не соответствует шаблону {template}'
-                )
+                         )
                 self.assertTemplateUsed(response, template, error)
 
     """Задание из Практикума "Тестирование Views" No2:"""
     def test_post_detail_correct_context(self):
         """Проверка шаблона "post_detail" на контекст."""
         response = self.author_client.get(reverse('posts:post_detail',
-                                                   kwargs={'post_id':
-                                                   self.post.id}))
+                                                  kwargs={'post_id':
+                                                          self.post.id}))
         post_text_0 = {response.context['post'].text: 'Тестовый пост No1',
                        response.context['post'].group: self.group,
                        response.context['post'].author: PostViewsTest.user
