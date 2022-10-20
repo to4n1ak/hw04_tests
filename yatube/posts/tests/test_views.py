@@ -122,7 +122,7 @@ class PostViewsTest(TestCase):
                 final_result = response.context.get('form').fields.get(value)
                 self.assertIsInstance(final_result, expected)
         self.assertTrue(response.context.get('is_edit'))
-    
+
     """Задание из Практикума "Тестирование Views" No3:"""
     def test_new_post(self):
         """Проверка создания нового поста"""
@@ -149,6 +149,8 @@ class PostViewsTest(TestCase):
 
 
 """Задание из Практикума "Тестирование Views" No4:"""
+
+
 class PaginatorTest(TestCase):
     @classmethod
     def setUpClass(cls):
