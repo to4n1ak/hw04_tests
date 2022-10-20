@@ -23,9 +23,9 @@ class PostViewsTest(TestCase):
             description='Описание тестовой группы No1',
         )
         cls.post = Post.objects.create(
-                author=cls.user,
-                text='Тестовый пост No1',
-                group=cls.group,
+            author=cls.user,
+            text='Тестовый пост No1',
+            group=cls.group,
         )
 
     """Задание из Практикума "Тестирование Views" No1:"""
