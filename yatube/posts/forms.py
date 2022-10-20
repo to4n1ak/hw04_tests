@@ -15,11 +15,3 @@ class PostForm(ModelForm):
             'text': 'Заполните текст поста',
             'group': 'Выберите сообщество',
         }
-
-    def clean_subject(self):
-        data = self.cleaned_data['text']
-
-        if data == '':
-            raise forms.ValidationError('Пожалуйста, напишите пост')
-
-        return data

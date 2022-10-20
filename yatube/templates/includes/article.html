@@ -1,3 +1,4 @@
+<article>
 <ul>
   <li>
     <b>Автор</b>: {{ post.author.get_full_name }}
@@ -12,6 +13,12 @@
   </li>
 </ul>
 <p>{{ post.text }}</p>
-<a href="{% url 'posts:post_detail' post.id %}">Подробная информация о сообщении</a>
-{% block group_link %}
-{% endblock %}
+<a href="{% url 'posts:post_detail' post.id %}">Подробная информация о сообщении</a></br>
+{% if post.group %}
+  {% with request.resolver_match.view_name as view_name %}
+    {% if view_name != 'posts:group_list' %}
+      <a href="{% url 'posts:group_list' post.group.slug %}">Все записи группы "{{ post.group.title }}"</a>
+    {% endif %}
+  {% endwith %}
+{% endif %}
+</article>

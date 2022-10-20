@@ -1,15 +1,14 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Group, User
 from .forms import PostForm
 from .utils import page_num
 from django.contrib.auth.decorators import login_required
 
-POST_PER_PAGE = 10  # Кол-во постов на странице
-
 
 def index(request):
-    post_list = Post.objects.select_related('group')
-    page_obj = page_num(request, post_list, POST_PER_PAGE)
+    post_list = Post.objects.select_related('author', 'group').all()
+    page_obj = page_num(request, post_list, settings.POST_PER_PAGE)
     context = {
         'page_obj': page_obj,
     }
@@ -18,8 +17,8 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    post_list = Post.objects.select_related('group')
-    page_obj = page_num(request, post_list, POST_PER_PAGE)
+    post_list = group.posts.all()
+    page_obj = page_num(request, post_list, settings.POST_PER_PAGE)
     context = {
         'group': group,
         'page_obj': page_obj,
@@ -29,8 +28,8 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    post_list = author.posts.all()
-    page_obj = page_num(request, post_list, POST_PER_PAGE)
+    post_list = author.posts.select_related('group')
+    page_obj = page_num(request, post_list, settings.POST_PER_PAGE)
     context = {
         'author': author,
         'page_obj': page_obj,
@@ -52,7 +51,7 @@ def post_create(request):
         data=request.POST or None,
     )
 
-    if request.method != 'POST' or not form.is_valid():
+    if not form.is_valid():
         context = {'form': form, 'is_edit': False}
         return render(request, 'posts/create_post.html', context)
 

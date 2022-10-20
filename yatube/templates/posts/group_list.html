@@ -8,9 +8,7 @@
   <p>{{ group.description }}</p>
   <p>Сообщения сообщества "{{ group.title }}":</p>
   {% for post in page_obj %}
-  <article>
     {% include 'includes/article.html' %}
-  </article>
   {% if not forloop.last %}<hr>{% endif %}
 {% endfor %}
 {% include 'includes/paginator.html' %}

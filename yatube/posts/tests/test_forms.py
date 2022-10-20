@@ -17,7 +17,7 @@ class PostViewsTest(TestCase):
             slug='testgroup1',
             description='Описание тестовой группы No1',
         )
-        cls.post1 = Post.objects.create(
+        cls.post = Post.objects.create(
             author=cls.user,
             text='Тестовый пост No1',
             group=cls.group,
@@ -33,11 +33,11 @@ class PostViewsTest(TestCase):
         total_posts = Post.objects.count()
         new_post = {'text': 'Обновлённый пост'}
         self.author_client.post(
-            reverse('posts:post_edit', kwargs={'post_id': self.post1.id}),
+            reverse('posts:post_edit', kwargs={'post_id': self.post.id}),
             data=new_post,
             follow=True)
-        self.post1.refresh_from_db()
-        self.assertEqual(self.post1.text, 'Обновлённый пост')
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.text, 'Обновлённый пост')
         self.assertEqual(Post.objects.count(), total_posts)
 
     def test_new_post_create(self):
