@@ -57,7 +57,6 @@ class PostViewsTest(TestCase):
 
     """Задание из Практикума "Тестирование Views" No2:"""
     def check_method(self, post):  # метод для проверок
-        with self.subTest(post=post):
             self.assertEqual(post.text, self.post.text)
             self.assertEqual(post.author, self.post.author)
             self.assertEqual(post.group.id, self.post.group.id)
@@ -88,14 +87,7 @@ class PostViewsTest(TestCase):
         response = self.author_client.get(
             reverse("posts:post_detail", kwargs={"post_id": self.post.id})
         )
-        post_text_0 = {
-            response.context["post"].text: "Тестовый пост No1",
-            response.context["post"].group: self.group,
-            response.context["post"].author: self.user.username,
-        }
-        for value, expected in post_text_0.items():
-            self.assertEqual(post_text_0[value], expected)
-            self.check_method(response.context["post"])
+        self.check_method(response.context["post"])
 
     def test_post_create_correct_context(self):
         """Проверка шаблона "post_create" на контекст."""
@@ -173,35 +165,19 @@ class PaginatorTest(TestCase):
         Post.objects.bulk_create(new_posts)
 
     def test_paginator_first_page_ten_posts(self):
-        """Проверка вывода 10 сообщений."""
-        response = (
+        """Проверка вывода кол-ва сообщений."""
+        pages = (
             reverse('posts:index'),
             reverse('posts:group_list',
                     kwargs={'slug': f'{self.group.slug}'}),
             reverse('posts:profile',
                     kwargs={'username': f'{self.user.username}'})
         )
-        for reverse_name in response:
-            with self.subTest(reverse_name=reverse_name):
-                response = self.author_client.get(reverse_name)
-                self.assertEqual(
-                    len(response.context['page_obj'].object_list),
-                    settings.POST_PER_PAGE
-                )
-
-    def test_paginator_second_page(self):
-        """Проверка вывода сообщений на второй странице."""
-        response = (
-            (reverse('posts:index') + '?page=2'),
-            (reverse('posts:group_list',
-                     kwargs={'slug': f'{self.group.slug}'}) + '?page=2'),
-            (reverse('posts:profile',
-                     kwargs={'username': f'{self.user.username}'}) + '?page=2')
-        )
-        for reverse_name in response:
-            with self.subTest(reverse_name=reverse_name):
-                response = self.author_client.get(reverse_name)
-                self.assertEqual(
-                    len(response.context['page_obj'].object_list),
-                    Post.objects.count() - settings.POST_PER_PAGE
-                )
+        for page in pages:
+            response_1st_page = self.author_client.get(page)
+            response_2nd_page = self.author_client.get(page + '?page=2')
+        count_posts_1st_page = len(response_1st_page.context['page_obj'])
+        count_posts_2nd_page = len(response_2nd_page.context['page_obj'])
+        self.assertEqual(count_posts_1st_page, settings.POST_PER_PAGE)
+        self.assertEqual(count_posts_2nd_page,
+                         Post.objects.count() - settings.POST_PER_PAGE)
