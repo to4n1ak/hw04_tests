@@ -57,9 +57,9 @@ class PostViewsTest(TestCase):
 
     """Задание из Практикума "Тестирование Views" No2:"""
     def check_method(self, post):  # метод для проверок
-            self.assertEqual(post.text, self.post.text)
-            self.assertEqual(post.author, self.post.author)
-            self.assertEqual(post.group.id, self.post.group.id)
+        self.assertEqual(post.text, self.post.text)
+        self.assertEqual(post.author, self.post.author)
+        self.assertEqual(post.group.id, self.post.group.id)
 
     def test_index_correct_context(self):
         """Проверка шаблона "index" на контекст."""
