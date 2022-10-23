@@ -156,28 +156,27 @@ class PaginatorTest(TestCase):
             description='Описание тестовой группы No1',
         )
 
-    def setUp(self):  # Создание постов для тестирования паджинатора
-        new_posts = []
+        new_posts = []  # Создание постов для тестирования паджинатора
         for i in range(TEST_POSTS_TOTAL):
-            new_posts.append(Post(author=self.user,
+            new_posts.append(Post(author=cls.user,
                                   text=f'Тестовый пост No{i}',
-                                  group=self.group))
+                                  group=cls.group))
         Post.objects.bulk_create(new_posts)
 
     def test_paginator_first_page_ten_posts(self):
         """Проверка вывода кол-ва сообщений."""
-        pages = (
+        addresses = (
             reverse('posts:index'),
             reverse('posts:group_list',
                     kwargs={'slug': f'{self.group.slug}'}),
             reverse('posts:profile',
                     kwargs={'username': f'{self.user.username}'})
         )
-        for page in pages:
-            response_1st_page = self.author_client.get(page)
-            response_2nd_page = self.author_client.get(page + '?page=2')
-        count_posts_1st_page = len(response_1st_page.context['page_obj'])
-        count_posts_2nd_page = len(response_2nd_page.context['page_obj'])
-        self.assertEqual(count_posts_1st_page, settings.POST_PER_PAGE)
-        self.assertEqual(count_posts_2nd_page,
-                         Post.objects.count() - settings.POST_PER_PAGE)
+        for address in addresses:
+            response_1st_page = self.author_client.get(address)
+            response_2nd_page = self.author_client.get(address, {"page": 2})
+            count_posts_1st_page = len(response_1st_page.context['page_obj'])
+            count_posts_2nd_page = len(response_2nd_page.context['page_obj'])
+            self.assertEqual(count_posts_1st_page, settings.POST_PER_PAGE)
+            self.assertEqual(count_posts_2nd_page,
+                             Post.objects.count() - settings.POST_PER_PAGE)
